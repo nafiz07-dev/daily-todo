@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Manager</title>
+    <!-- <link rel="stylesheet" href="style.css" /> -->
+    <link rel="stylesheet" href="sass.css" />
+    <link rel="shortcut icon" href="image.png" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script
+      src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+      type="module"
+    ></script>
+
+    <script defer src="script.js"></script>
+    <!-- <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    /> -->
+  </head>
+  <body>
+    <div class="task-saved display-none">
+      <i class="fa-regular fa-circle-check task-saved-icon"></i>
+      <div class="task-saved-title">Your task is been saved</div>
+    </div>
+    <div class="delete-all-modal display-none">
+      <div class="choice-back"></div>
+      <div class="choice">
+        <div class="choice-title">
+          You sure want to delete all of your task?
+        </div>
+        <div class="choic-buttons">
+          <button class="delete-cancel choice-common">Cancel</button>
+          <button class="yes-delete choice-common">Yes, I'm Sure</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-task-view display-none">
+      <div class="view-back"></div>
+      <div class="view-content">
+        <i class="fa-solid fa-xmark view-close"></i>
+        <div class="view-title">Your Task</div>
+        <input
+          type="text"
+          placeholder="Type Your Tasks"
+          class="task-view-title input-common"
+          value=""
+        />
+        <div class="error-empty">Can't leave this empty</div>
+        <div>
+          <textarea
+            placeholder="Add Discription"
+            class="view-discription input-common"
+          ></textarea>
+        </div>
+        <div class="priority">
+          <select name="priority" class="priority-select"></select>
+        </div>
+        <button class="save-edit">Save</button>
+      </div>
+    </div>
+
+    <div class="modal-new-task display-none">
+      <div class="back"></div>
+      <div class="content">
+        <i class="fa-solid fa-xmark close"></i>
+        <div class="modal-title">Add New Task</div>
+        <input
+          type="text"
+          placeholder="Type Your Tasks*"
+          class="input-task input-common"
+        />
+        <div>
+          <textarea
+            placeholder="Add Discription"
+            class="input-discription input-common"
+          ></textarea>
+        </div>
+        <div>
+          <select name="priority" class="select">
+            <option disabled hidden selected value="null">
+              Give a Priority
+            </option>
+            <option value="3">Low</option>
+            <option value="2">Medium</option>
+            <option value="1">High</option>
+          </select>
+        </div>
+        <button class="add-task">Add Task</button>
+        <div class="task-added">
+          <div class="display-flex">
+            <div class="added">
+              <i class="fa-regular fa-circle-check"></i>
+            </div>
+            <div class="added-title">
+              Your Task is been added to your Daily ToDo
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="top">
+      <nav>
+        <div class="title">Daily ToDo</div>
+        <div>
+          <button class="new-task">New Task</button>
+        </div>
+      </nav>
+    </div>
+
+    <main class="main">
+      <section class="status-section">
+        <div class="status-bar">
+          <div class="down">
+            <i class="fa-solid fa-angle-down up-down"></i>
+            <i class="fa-solid fa-angle-up up-down"></i>
+          </div>
+          <div class="total-task task-common task-title-side">
+            Total Task: <span class="task-count task-common">-</span>
+          </div>
+
+          <div class="task-completed task-common task-title-side">
+            Task Completed:
+            <span class="task-completed-count task-common">0</span>
+          </div>
+          <div class="task-left task-common task-title-side">
+            Task Left: <span class="task-left-count task-common">0</span>
+          </div>
+          <button class="task-delete">Delete All</button>
+        </div>
+      </section>
+      <section class="content-section">
+        <div class="loader display-none">
+          <dotlottie-player
+            src="https://lottie.host/a80d98ab-15c2-4e1e-9be1-dd745078dc0b/FfyNfjJL6D.lottie"
+            background="transparent"
+            speed="1"
+            style="width: 300px; height: 300px"
+            loop
+            autoplay
+            class="lotti-loader"
+          ></dotlottie-player>
+        </div>
+        <div class="mid">
+          <div class="status">
+            <div class="all status-common common-js active">ALL</div>
+            <div class="completed status-common common-js">COMPLETED</div>
+            <div class="uncompleted status-common common-js">UNCOMPLETED</div>
+            <div class="priority-low status-common common-js">LOW</div>
+            <div class="priority-medium status-common common-js">MEDIUM</div>
+            <div class="priority-high status-common common-js">HIGH</div>
+          </div>
+          <!-- <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+          <script>
+            var swiper = new Swiper(".mySwiper", {
+              slidesPerView: 8,
+              spaceBetween: 7,
+              pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+              },
+            });
+          </script> -->
+          <div class="divider"></div>
+        </div>
+
+        <!-- task card  -->
+        <p class="initial-sms">Add a Task to Begin with.</p>
+        <div class="task-content common-task"></div>
+        <div class="task-short-all"></div>
+        <div class="task-short-completed"></div>
+        <div class="task-short-uncompleted"></div>
+        <div class="task-short-high"></div>
+        <div class="task-short-medium"></div>
+        <div class="task-short-low"></div>
+      </section>
+    </main>
+  </body>
+</html>
