@@ -284,8 +284,14 @@ taskCard.forEach((e) => {
         ])
       );
       localStorage.removeItem(taskId1);
-      window.location.reload();
+      const taskCardElement = document.querySelector(
+        `[data-hash="${taskId1}"]`
+      );
+      const taskTitle = taskCardElement.querySelector(".task-title");
+      taskTitle.style.color = "gray";
+      // window.location.reload();
     } else {
+      const taskId1 = e.dataset.hash;
       localStorage.setItem(
         `${Date.now()}`,
         JSON.stringify([
@@ -298,7 +304,12 @@ taskCard.forEach((e) => {
         ])
       );
       localStorage.removeItem(taskId1);
-      window.location.reload();
+      const taskCardElement = document.querySelector(
+        `[data-hash="${taskId1}"]`
+      );
+      const taskTitle = taskCardElement.querySelector(".task-title");
+      taskTitle.style.color = "white";
+      // window.location.reload();
     }
   });
 });
@@ -313,8 +324,10 @@ for (let i = 0; i < localStorage.length; i++) {
   // deletion logic
   const deleteIcon = taskCardElementToSelect.querySelector(".delete");
   deleteIcon.addEventListener("click", function () {
+    const taskCardElement = document.querySelector(`[data-hash="${key}"]`);
+    taskCardElement.style.display = "none";
     localStorage.removeItem(key);
-    window.location.reload();
+    // window.location.reload();
   });
 
   // Check if the specific condition for "true" is met
@@ -395,244 +408,91 @@ const displayShortedTask = function (valueArr, element) {
   element.insertAdjacentHTML("afterbegin", html);
 };
 
-shortAll.addEventListener("click", function () {
-  window.location.reload();
-});
-
-// status click button
-const statusClickLogic = function (
-  ObjValueIndex,
-  includes,
-  displayShortedTaskVar,
-  noneLogic
-) {
-  /* 
-  ObjValueIndex is the value that will be checked if something is included; 
-  includes is the value that will be checked if includes
-  displayShortedTaskVar is the value where the html templete will be added through displayShortedTask function;
-  noneLogic is the string of a variable name that will be displayed as blcok and other will be none.  
-  */
-
-  let arrHigh = [];
-  for (let i = 0; i < localStorage.length; i++) {
-    let key = localStorage.key(i);
-    let valueArr = JSON.parse(localStorage.getItem(key));
-
-    if (Object.values(valueArr)[ObjValueIndex].includes(`${includes}`)) {
-      arrHigh.push(valueArr[0]);
-    }
-  }
-
-  arrHigh.forEach((e) => {
-    let value = JSON.parse(localStorage.getItem(e));
-    if (value && value.includes("true")) {
-      const taskCardElement = document.querySelector(`[data-hash="${e}"]`); // Get the corresponding task card
-      const inputCheck = taskCardElement.querySelector(
-        'input[type="checkbox"]'
-      ); // Get the checkbox for this task card
-      const taskTitle = taskCardElement.querySelector(".task-title");
-      if (inputCheck) {
-        inputCheck.checked = true; // Mark it as checked
-        taskTitle.style.color = "gray";
-      }
+// element shortner
+const shortElement = function (shortByPrioriy, shortByInput) {
+  taskCard.forEach((e) => {
+    const taskTitleElement = e.querySelector(".task-title");
+    const input = e.querySelector(".checkbox");
+    if (shortByInput) {
+      const isVisible = input.checked;
+      e.classList.toggle("display-none", !isVisible);
     } else {
-      // Get the corresponding task card
-      const taskCardElement = document.querySelector(`[data-hash="${e}"]`);
-      // Get the checkbox for this task card
-      const inputCheck = taskCardElement.querySelector(
-        'input[type="checkbox"]'
+      const isVisible = taskTitleElement.innerHTML.includes(
+        `<span class="${shortByPrioriy.toLowerCase()}">${shortByPrioriy.toUpperCase()}</span>`
       );
-      // Get the current title
-      const taskTitle = taskCardElement.querySelector(".task-title");
-
-      if (inputCheck) {
-        inputCheck.checked = false; // Mark it as checked
-        taskTitle.style.color = "white";
-      }
+      e.classList.toggle("display-none", !isVisible);
     }
-    displayShortedTask(
-      JSON.parse(localStorage.getItem(e)),
-      displayShortedTaskVar
-    );
-    // none/blcok logic
-    displayContent.style.display = `${
-      noneLogic === "displayContent" ? "block" : "none"
-    }`;
-    taskShortMedium.style.display = `${
-      noneLogic === "taskShortMedium" ? "block" : "none"
-    }`;
-    taskShortLow.style.display = `${
-      noneLogic === "taskShortLow" ? "block" : "none"
-    }`;
-    taskShortHigh.style.display = `${
-      noneLogic === "taskShortHigh" ? "block" : "none"
-    }`;
-    taskShortCompleted.style.display = `${
-      noneLogic === "taskShortCompleted" ? "block" : "none"
-    }`;
-    taskShortUnCompleted.style.display = `${
-      noneLogic === "taskShortUnCompleted" ? "block" : "none"
-    }`;
-    taskShortAll.style.display = `${
-      noneLogic === "taskShortAll" ? "block" : "none"
-    }`;
-  });
-  const inputCheckHid = document.querySelectorAll(".checkbox");
-  inputCheckHid.forEach((e) => {
-    e.style.display = "none";
   });
 };
 
-let isClickedShortCompleted = false;
-shortCompleted.addEventListener("click", function () {
-  if (isClickedShortCompleted) return;
+shortAll.addEventListener("click", function () {
+  taskCard.forEach((e) => {
+    shortAll.classList.add("active");
+    removeActive(shortCompleted);
+    removeActive(shortPriorityHigh);
+    removeActive(shortUnCompleted);
+    removeActive(shortPriorityLow);
+    removeActive(shortPriorityMedium);
+    const isVisible = true;
+    e.classList.toggle("display-none", !isVisible);
+  });
+});
 
+shortCompleted.addEventListener("click", function () {
+  shortElement("", true);
   shortCompleted.classList.add("active");
   removeActive(shortAll);
   removeActive(shortPriorityHigh);
   removeActive(shortUnCompleted);
   removeActive(shortPriorityLow);
   removeActive(shortPriorityMedium);
-
-  let arrHigh = [];
-  for (let i = 0; i < localStorage.length; i++) {
-    let key = localStorage.key(i);
-    let valueArr = JSON.parse(localStorage.getItem(key));
-
-    if (valueArr.includes("true")) {
-      arrHigh.push(valueArr[0]);
-    }
-  }
-  arrHigh.forEach((e) => {
-    let value = JSON.parse(localStorage.getItem(e));
-    if (value && value.includes("true")) {
-      displayShortedTask(
-        JSON.parse(localStorage.getItem(e)),
-        taskShortCompleted
-      );
-      const taskCardElement = document.querySelector(`[data-hash="${e}"]`); // Get the corresponding task card
-      const inputCheck = taskCardElement.querySelector(
-        'input[type="checkbox"]'
-      ); // Get the checkbox for this task card
-      const taskTitle = taskCardElement.querySelector(".task-title");
-      if (inputCheck) {
-        inputCheck.checked = true; // Mark it as checked
-        taskTitle.style.color = "gray";
-      }
-    } else {
-      // Get the corresponding task card
-      const taskCardElement = document.querySelector(`[data-hash="${e}"]`);
-      // Get the checkbox for this task card
-      const inputCheck = taskCardElement.querySelector(
-        'input[type="checkbox"]'
-      );
-      // Get the current title
-      const taskTitle = taskCardElement.querySelector(".task-title");
-
-      if (inputCheck) {
-        inputCheck.checked = false; // Mark it as checked
-        taskTitle.style.color = "white";
-      }
-    }
-    displayContent.style.display = "none";
-    taskShortMedium.style.display = "none";
-    taskShortLow.style.display = "none";
-    taskShortHigh.style.display = "none";
-    taskShortCompleted.style.display = "block";
-    taskShortUnCompleted.style.display = "none";
-    taskShortAll.style.display = "none";
-  });
-
-  isClickedShortCompleted = true;
-  const inputCheckHid = document.querySelectorAll(".checkbox");
-  inputCheckHid.forEach((e) => {
-    e.style.display = "none";
-  });
 });
 
-let isClickedShortUnCompleted = false;
-
 shortUnCompleted.addEventListener("click", function () {
-  const taskLeft = document.querySelector(".task-left-count");
-  if (isClickedShortUnCompleted) return;
+  taskCard.forEach((e) => {
+    const taskTitleElement = e.querySelector(".task-title");
+    const input = e.querySelector(".checkbox");
+    const isVisible = input.checked;
+    e.classList.toggle("display-none", isVisible);
+    // }
+  });
+
   shortUnCompleted.classList.add("active");
   removeActive(shortAll);
   removeActive(shortCompleted);
   removeActive(shortPriorityHigh);
   removeActive(shortPriorityLow);
   removeActive(shortPriorityMedium);
-  let arrHigh = [];
-  for (let i = 0; i < localStorage.length; i++) {
-    let key = localStorage.key(i);
-    let valueArr = JSON.parse(localStorage.getItem(key));
-
-    if (!Object.values(valueArr)[5]) {
-      arrHigh.push(valueArr[0]);
-    }
-  }
-
-  arrHigh.forEach((e) => {
-    displayShortedTask(
-      JSON.parse(localStorage.getItem(e)),
-      taskShortUnCompleted
-    );
-
-    displayContent.style.display = "none";
-    taskShortMedium.style.display = "none";
-    taskShortLow.style.display = "none";
-    taskShortHigh.style.display = "none";
-    taskShortCompleted.style.display = "none";
-    taskShortUnCompleted.style.display = "block";
-    taskShortAll.style.display = "none";
-  });
-  isClickedShortUnCompleted = true;
-  const inputCheckHid = document.querySelectorAll(".checkbox");
-  inputCheckHid.forEach((e) => {
-    e.style.display = "none";
-  });
 });
 
-let isClickedShortPriorityHigh = false;
-
 shortPriorityHigh.addEventListener("click", function () {
-  if (isClickedShortPriorityHigh) return;
+  shortElement("high", false);
   shortPriorityHigh.classList.add("active");
   removeActive(shortAll);
   removeActive(shortCompleted);
   removeActive(shortUnCompleted);
   removeActive(shortPriorityLow);
   removeActive(shortPriorityMedium);
-  statusClickLogic(4, 1, taskShortHigh, "taskShortHigh");
-
-  isClickedShortPriorityHigh = true;
 });
 
-let isClickedShortPriorityMedium = false;
 shortPriorityMedium.addEventListener("click", function () {
-  if (isClickedShortPriorityMedium) return;
+  shortElement("medium", false);
   shortPriorityMedium.classList.add("active");
   removeActive(shortAll);
   removeActive(shortCompleted);
   removeActive(shortUnCompleted);
   removeActive(shortPriorityHigh);
   removeActive(shortPriorityLow);
-
-  statusClickLogic(4, 2, taskShortMedium, "taskShortMedium");
-  isClickedShortPriorityMedium = true;
 });
 
-let isClickedShortPriorityLow = false;
 shortPriorityLow.addEventListener("click", function () {
-  if (isClickedShortPriorityLow) return;
+  shortElement("low", false);
   shortPriorityLow.classList.add("active");
   removeActive(shortAll);
   removeActive(shortCompleted);
   removeActive(shortUnCompleted);
   removeActive(shortPriorityHigh);
   removeActive(shortPriorityMedium);
-
-  statusClickLogic(4, 3, taskShortLow, "taskShortLow");
-  isClickedShortPriorityLow = true;
 });
 
 // side pannel translate down on click
@@ -647,25 +507,23 @@ upDownBtn.addEventListener("click", function () {
   });
 });
 
-
-// initial sms 
-const initialSMS = document.querySelector('.initial-sms');
+// initial sms
+const initialSMS = document.querySelector(".initial-sms");
 if (!localStorage.length > 0) {
-  initialSMS.style.display = 'block';
+  initialSMS.style.display = "block";
 } else {
-  initialSMS.style.display = 'none';
+  initialSMS.style.display = "none";
 }
-
 
 //displayContent
 // the loading sms
-// when there is no html content and the value of localstorage.length is greater then zero.then display the loader; 
-const loader = document.querySelector('.loader');
+// when there is no html content and the value of localstorage.length is greater then zero.then display the loader;
+const loader = document.querySelector(".loader");
 
 if (!displayContent.children.length > 0 && localStorage.length > 0) {
-  loader.classList.remove('display-none');
+  loader.classList.remove("display-none");
   console.log("loader was loaded");
   // console.log("has element");
 } else {
-  loader.classList.add('display-none');
+  loader.classList.add("display-none");
 }
